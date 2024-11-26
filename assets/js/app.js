@@ -133,13 +133,22 @@ function showCustomPopup() {
   popupContainer.style.top = "50%";
   popupContainer.style.left = "50%";
   popupContainer.style.transform = "translate(-50%, -50%)";
-  popupContainer.style.backgroundColor = "#61058b";
+  popupContainer.style.backgroundColor = "#272727";
   popupContainer.style.padding = "20px";
   popupContainer.style.borderRadius = "10px";
   popupContainer.style.textAlign = "center";
   popupContainer.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.3)";
   popupContainer.style.maxWidth = "400px";
   popupContainer.style.width = "90%";
+
+  const tickImage = document.createElement("img");
+  tickImage.src = "/assets/images/checked.png";
+  tickImage.alt = "Success Tick";
+  tickImage.style.width = "50px";
+  tickImage.style.height = "50px";
+  tickImage.style.marginBottom = "15px";
+  tickImage.style.display = "block";
+  tickImage.style.margin = "0 auto";
 
   const message = document.createElement("p");
   message.style.fontSize = "16px";
@@ -164,6 +173,7 @@ function showCustomPopup() {
     location.reload(); // Refresh the page to clear forms
   });
 
+  popupContainer.appendChild(tickImage);
   popupContainer.appendChild(message);
   popupContainer.appendChild(closeButton);
   blurBackground.appendChild(popupContainer);
