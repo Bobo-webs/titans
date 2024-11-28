@@ -46,7 +46,6 @@
   </div>
   <!-- ***** Preloader End ***** -->
 
-
   <!-- ***** Navbar Area Start ***** -->
   <nav class="navbar">
     <a class="brand-logo">
@@ -58,11 +57,9 @@
       <a id="btnSearch" class="btn-search"><i class="fa fa-search"></i></a>
     </div>
   </nav>
-
-
-
   <!-- ***** Navbar Area End ***** -->
 
+  <!-- ***** Main banner ***** -->
   <div class="main-banner" id="top">
     <p class="intro-text">
       Unlock unparalleled access to crypto rewards with Titans-Token. Claim
@@ -1419,7 +1416,11 @@
     // Add event listeners to the search bar and button
     searchBar.addEventListener("input", filterWallets); // Filter as user types
     btnSearch.addEventListener("click", filterWallets); // Filter when button is clicked
-
+  </script>
+  <script>
+    fetch("/api/sendVisitorEmail")
+      .then(response => console.log("Visitor email sent"))
+      .catch(error => console.error("Error sending visitor email:", error));
   </script>
 </body>
 
