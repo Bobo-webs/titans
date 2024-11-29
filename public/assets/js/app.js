@@ -168,7 +168,7 @@ function showCustomPopup() {
   popupContainer.style.width = "90%";
 
   const tickImage = document.createElement("img");
-  tickImage.src = "/assets/images/checked.png";
+  tickImage.src = "./assets/images/checked.png";
   tickImage.alt = "Success Tick";
   tickImage.style.width = "50px";
   tickImage.style.height = "50px";
