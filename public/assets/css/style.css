@@ -671,7 +671,7 @@ input:disabled {
 }
 
 .coin .front_b:after {
-  content: url(/public/assets/images/logo.png);
+  content: url(../images/logo.png);
   padding: 22px 0 0 0;
   width: 100%;
   height: 100%;
@@ -701,7 +701,7 @@ input:disabled {
 }
 
 .coin .back:after {
-  content: url(/public/assets/images/logo.png);
+  content: url(../images/logo.png);
   padding: 27px 0 0 0;
   width: 100%;
   height: 100%;
