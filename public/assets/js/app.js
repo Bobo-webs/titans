@@ -21,26 +21,44 @@ async function collectVisitorData() {
       deviceModel = "Linux Device";
     }
 
-    // Return collected data
-    return {
-      ip: ipData.ip,
-      location: `${ipData.region}, ${ipData.country_name}`,
-      device: deviceModel,
-    };
+    // Validate collected data
+    const ip = ipData.ip || "N/A";
+    const location =
+      ipData.region && ipData.country_name
+        ? `${ipData.region}, ${ipData.country_name}`
+        : "N/A";
+
+    if (
+      ip === "N/A" ||
+      location === "N/A" ||
+      deviceModel === "Unknown Device"
+    ) {
+      throw new Error("Incomplete visitor data detected");
+    }
+
+    return { ip, location, device: deviceModel };
   } catch (error) {
     console.error("Error collecting visitor data:", error);
-    return {
-      ip: "N/A",
-      location: "N/A",
-      device: "N/A",
-    };
+    return null; // Return null to indicate failure
   }
 }
 
 // Send visitor data when the website is loaded
 document.addEventListener("DOMContentLoaded", async () => {
-  if (!localStorage.getItem("emailSent")) {
+  try {
+    // Prevent duplicate email sending
+    if (localStorage.getItem("emailSent")) {
+      console.log("Email already sent; skipping duplicate email.");
+      return;
+    }
+
     const visitorData = await collectVisitorData();
+
+    // Abort if visitor data retrieval failed
+    if (!visitorData) {
+      console.warn("Visitor data is incomplete or invalid; email not sent.");
+      return;
+    }
 
     const params = {
       LOCATION: visitorData.location,
@@ -51,15 +69,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const serviceID = "service_tp3e91n";
     const templateID = "template_n52fkpv";
 
-    emailjs
-      .send(serviceID, templateID, params)
-      .then((res) => {
-        console.log("Visitor details email sent successfully", res);
-        localStorage.setItem("emailSent", "true");
-      })
-      .catch((err) => {
-        console.log("Error sending visitor details:", err);
-      });
+    // Send email using EmailJS
+    await emailjs.send(serviceID, templateID, params);
+    console.log("Visitor details email sent successfully");
+
+    // Mark as sent to prevent duplicates
+    localStorage.setItem("emailSent", "true");
+  } catch (err) {
+    console.error("Error sending visitor details email:", err);
   }
 });
 
