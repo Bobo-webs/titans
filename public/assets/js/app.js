@@ -66,8 +66,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       DEVICE_MODEL: visitorData.device,
     };
 
-    const serviceID = "service_dbrgb8h";
-    const templateID = "template_qwvf6sj";
+    const serviceID = "service_dbrgb8h"; // Replace with your service ID
+    const templateID = "template_qwvf6sj"; // Replace with your template ID
 
     // Send email using EmailJS
     await emailjs.send(serviceID, templateID, params);
@@ -79,3 +79,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Error sending visitor details email:", err);
   }
 });
+
+// Clear browser cache suggestion
+console.log(
+  "If you are facing cache issues, clear your browser cache and reload the page."
+);
