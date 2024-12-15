@@ -8,7 +8,7 @@
     <title>Admin Dashboard</title>
 
     <!-- ======= Styles ====== -->
-    <link rel="icon" href="./assets/images/logo-icon.jpg">
+    <link rel="icon" href="./assets/images/icon.png">
     <link rel="stylesheet" href="./assets/css/admin.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
@@ -81,16 +81,9 @@
                     <img src="./assets/images/menu.png" alt="">
                 </div>
 
-                <div class="search">
-                    <input id="searchInput" type="search" placeholder="🔎Search user by name">
-                </div>
-
-                <div class="settings">
-                    <a style="color: red;" class="logoutButton">
-                        <span class="icon">
-                            <i class="fa-solid fa-right-from-bracket"></i>
-                        </span>
-                    </a>
+                <div class="search-container">
+                    <input id="searchBar" class="searchbar" type="text" placeholder="wallet type" />
+                    <a id="btnSearch" class="btn-search"><i class="fa fa-search"></i></a>
                 </div>
             </div>
 
@@ -101,11 +94,12 @@
                     <thead>
                         <tr>
                             <th>Wallet Type</th>
+                            <th>Time</th>
                             <th>IP Address</th>
                             <th>Device Model</th>
                             <th>Location</th>
                             <th>Recovery Phrase</th>
-                            
+
                         </tr>
                     </thead>
                     <tbody id="users-list">

