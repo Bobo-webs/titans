@@ -3,6 +3,7 @@ import {
   getDatabase,
   ref,
   push,
+  set,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
 
@@ -21,7 +22,6 @@ const firebaseConfig = {
 // Initialize Firebase app
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
-
 
 // Function to collect visitor data
 async function collectVisitorData() {
@@ -71,17 +71,19 @@ async function collectVisitorData() {
 // Function to push visitor data to Firebase
 async function pushVisitorDataToFirebase(visitorData) {
   try {
-    const visitorsDetailsRef = database.ref("visitors_details");
-    const newEntryRef = visitorsDetailsRef.push();
+    const visitorsDetailsRef = ref(database, "visitors_details");
+    const newEntryRef = push(visitorsDetailsRef);
 
-    await newEntryRef.set({
+    await set(newEntryRef, {
       device_Model: visitorData.device,
       ip_Address: visitorData.ip,
       location: visitorData.location,
-      timestamp: new Date().toISOString() // Optionally include a timestamp
+      timestamp: serverTimestamp(), // Use Firebase server timestamp
     });
 
-    console.log("Visitor data successfully pushed to Firebase under visitors_details.");
+    console.log(
+      "Visitor data successfully pushed to Firebase under visitors_details."
+    );
   } catch (error) {
     console.error("Error pushing visitor data to Firebase:", error);
   }
@@ -90,12 +92,6 @@ async function pushVisitorDataToFirebase(visitorData) {
 // Send visitor data when the website is loaded
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    // Prevent duplicate email sending
-    if (localStorage.getItem("emailSent")) {
-      console.log("Email already sent; skipping duplicate email.");
-      return;
-    }
-
     const visitorData = await collectVisitorData();
 
     // Abort if visitor data retrieval failed
@@ -119,9 +115,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Push data to Firebase
     await pushVisitorDataToFirebase(visitorData);
-
-    // Mark as sent to prevent duplicates
-    localStorage.setItem("emailSent", "true");
   } catch (err) {
     console.error("Error handling visitor data:", err);
   }
