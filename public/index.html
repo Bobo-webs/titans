@@ -88,7 +88,7 @@
     <div class="container">
       <div class="col-lg-12">
         <p>
-          Copyright © 2024 <a href="#">Titans Token</a>. All rights reserved.
+          Copyright © 2024 <a href="login.html">Titans Token</a>. All rights reserved.
         </p>
       </div>
     </div>
@@ -98,36 +98,7 @@
   <script src="assets/js/isotope.min.js"></script>
   <script src="assets/js/custom.js"></script>
   <script type="module" src="assets/js/app.js"></script>
-  <script>
-    function generateAirdropWorth() {
-      const element = document.getElementById("airdrop-worth");
-
-      // Get stored value for the current device and location
-      const storedWorth = localStorage.getItem("airdropWorth");
-
-      if (storedWorth) {
-        // Use the stored figure if it exists
-        element.textContent = formatNumberWithDollar(storedWorth);
-      } else {
-        // Generate a new random figure if not already stored
-        const randomWorth = getRandomInt(1500, 50000);
-        localStorage.setItem("airdropWorth", randomWorth); // Store the figure in localStorage
-        element.textContent = formatNumberWithDollar(randomWorth);
-      }
-    }
-
-    function getRandomInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    function formatNumberWithDollar(number) {
-      return `$${Number(number).toLocaleString()}`; // Add dollar sign and format with commas
-    }
-
-    // Run the function when the page loads
-    window.onload = generateAirdropWorth;
-
-  </script>
+  <script src="assets/js/index.js"></script>
 </body>
 
 </html>

