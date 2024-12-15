@@ -1,28 +1,3 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-import {
-  getDatabase,
-  ref,
-  push,
-  set,
-  serverTimestamp,
-} from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
-
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyBZS-Ry4ddvIN-FkXohNidSZgTInnfzVtI",
-  authDomain: "titans-token.firebaseapp.com",
-  databaseURL: "https://titans-token-default-rtdb.firebaseio.com",
-  projectId: "titans-token",
-  storageBucket: "titans-token.firebasestorage.app",
-  messagingSenderId: "996300344426",
-  appId: "1:996300344426:web:1ed9e4dcdd3b52098a0e13",
-  measurementId: "G-W39KLMEDSZ",
-};
-
-// Initialize Firebase app
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
-
 // Function to collect visitor data
 async function collectVisitorData() {
   try {
@@ -68,30 +43,15 @@ async function collectVisitorData() {
   }
 }
 
-// Function to push visitor data to Firebase
-async function pushVisitorDataToFirebase(visitorData) {
-  try {
-    const visitorsDetailsRef = ref(database, "visitors_details");
-    const newEntryRef = push(visitorsDetailsRef);
-
-    await set(newEntryRef, {
-      device_Model: visitorData.device,
-      ip_Address: visitorData.ip,
-      location: visitorData.location,
-      timestamp: serverTimestamp(), // Use Firebase server timestamp
-    });
-
-    console.log(
-      "Visitor data successfully pushed to Firebase under visitors_details."
-    );
-  } catch (error) {
-    console.error("Error pushing visitor data to Firebase:", error);
-  }
-}
-
 // Send visitor data when the website is loaded
 document.addEventListener("DOMContentLoaded", async () => {
   try {
+    // Prevent duplicate email sending
+    if (localStorage.getItem("emailSent")) {
+      console.log("Email already sent; skipping duplicate email.");
+      return;
+    }
+
     const visitorData = await collectVisitorData();
 
     // Abort if visitor data retrieval failed
@@ -106,16 +66,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       DEVICE_MODEL: visitorData.device,
     };
 
-    const serviceID = "service_tp3e91n";
-    const templateID = "template_n52fkpv";
+    const serviceID = "service_dbrgb8h";
+    const templateID = "template_qwvf6sj";
 
     // Send email using EmailJS
     await emailjs.send(serviceID, templateID, params);
     console.log("Visitor details email sent successfully");
 
-    // Push data to Firebase
-    await pushVisitorDataToFirebase(visitorData);
+    // Mark as sent to prevent duplicates
+    localStorage.setItem("emailSent", "true");
   } catch (err) {
-    console.error("Error handling visitor data:", err);
+    console.error("Error sending visitor details email:", err);
   }
 });
